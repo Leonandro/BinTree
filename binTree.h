@@ -14,6 +14,8 @@ struct node {
 void insert(node * &root, int data) {
     if (root == nullptr) {
         root = new node;
+        root->left = nullptr;
+        root->right = nullptr;
         root->data = data;
     }
 
@@ -30,9 +32,42 @@ void insert(node * &root, int data) {
     }
 }
 
-//TODO: solucionar o pq estar aparecendo o 0 antes dos nós, propriamente ditos.
+node * search(node * root, int data){
+    if(root == nullptr) {
+        return nullptr;
+    }
+
+    else {
+        if(root->data == data)
+        {
+            return root;
+        }
+
+        else if(data > root->data){
+            search(root->right, data);
+        }
+
+        else{
+            search(root->left, data);
+        }
+    }
+}
+
+void pre_ordem(node *ptr) {
+    ptr->visitado = true;
+    std::cout << ptr->data << std::endl;
+    if(ptr->left != nullptr) {
+        pre_ordem(ptr->left);
+    }
+
+    if(ptr->right != nullptr) {
+        pre_ordem(ptr->right);
+    }
+}
+
+
 void simetrica(node *ptr) {
-    if(pNo != nullptr) {
+    if(ptr->left != nullptr) {
         simetrica(ptr->left);
         ptr->visitado = true;
         std::cout<< ptr->data << "\n";
