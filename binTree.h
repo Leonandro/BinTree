@@ -3,9 +3,12 @@
 
 #include <iostream>
 
+int position_counter = 0, aux, element_counter = 0, level_counter = 1;
+bool position_counter_check = false, element_counter_check = false; 
+
 struct node {
     int data;
-    int id;
+    int level;
     bool visitado;
     node * left;
     node * right;
@@ -17,16 +20,20 @@ void insert(node * &root, int data) {
         root->left = nullptr;
         root->right = nullptr;
         root->data = data;
+        root->level = level_counter;
+        level_counter = 1;
     }
 
     else {
         if (data == root->data) return;
 
         else if (data > root->data) {
+            level_counter++;
             insert(root->right, data);
         }
 
         else {
+            level_counter++;
             insert(root->left, data);
         }
     }
@@ -69,9 +76,70 @@ void pre_ordem(node *ptr) {
 void simetrica(node *ptr) {
     if(ptr->left != nullptr) {
         simetrica(ptr->left);
-        ptr->visitado = true;
-        std::cout<< ptr->data << "\n";
+    }
+
+    ptr->visitado = true;
+    std::cout<< ptr->data <<  " - (level)" << ptr->level << "\n";
+
+    if(ptr->right != nullptr){
         simetrica(ptr->right);
+    }
+}
+
+int posicao(node *ptr, int data) {
+    if(ptr->left != nullptr) {
+        posicao(ptr->left, data);
+    }
+
+    position_counter++;
+    if(ptr->data == data) {
+        aux = position_counter;
+        position_counter = 0;
+        position_counter_check = true;
+    }
+
+    if(ptr->right != nullptr){
+        posicao(ptr->right, data);
+    }
+
+    if(position_counter_check) return aux;
+}
+
+bool ehCheia (node * ptr) {
+    if(ptr != nullptr) {
+        if(( (ptr->left == nullptr) && (ptr->right != nullptr) ) || (ptr->right == nullptr) && (ptr->left != nullptr)) {
+            return false;
+        }
+
+        if(ptr->left != nullptr){
+            return (ehCheia(ptr->left) && ehCheia(ptr->right));
+        }
+        else{
+            return true;
+        }
+    }
+
+    else {
+        return false;
+    }
+}
+
+bool ehNada (node * ptr) {
+    if(ptr != nullptr) {
+        if(( (ptr->left == nullptr) && (ptr->right != nullptr) ) || (ptr->right == nullptr) && (ptr->left != nullptr)) {
+            return false;
+        }
+
+        if(ptr->left != nullptr){
+            return (ehCheia(ptr->left) && ehCheia(ptr->right));
+        }
+        else{
+            return true;
+        }
+    }
+
+    else {
+        return false;
     }
 }
 
