@@ -12,8 +12,7 @@ Leonandro Gurgel
 `make`
 
 # Execução
-A etapa de compilação irá gerar um executável **run** 
-Após executar o código (`./run`), será pedido somente o
+A etapa de compilação irá gerar um executável **run**. Após executar o código (`./run`), será pedido somente o
 diretório do arquivo de entrada de valores da árvore e em 
 seguida o diretório do arquivo de comandos.
 
