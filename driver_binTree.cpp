@@ -3,50 +3,52 @@
 int main () {
 
     node * raiz = nullptr;
-    int s;
+    std::string path;
+    int actual_node_data = 0;
+    std::fstream file_;
 
-    insert(raiz, 30);
-    insert(raiz, 15);
-    insert(raiz, 80);
-    insert(raiz, 10);
-    insert(raiz, 25);
-    insert(raiz, 40);
-    insert(raiz, 85);
-    insert(raiz, 20);
-    insert(raiz, 35);
-    insert(raiz, 50);
-    insert(raiz, 90);
-    insert(raiz, 45);
-    insert(raiz, 70);
-    insert(raiz, 60);
-    insert(raiz, 75);
-    insert(raiz, 55);
-    insert(raiz, 65);
+    std::cout << "Digite o endereço do arquivo contendo os nós: ";
+    std::cin >> path;
 
+    file_.open(path);
 
-    //std::cout << toString(raiz) << std::endl;
-    simetrica(raiz);
+    if(file_.is_open()){
+        while(file_ >> actual_node_data){
+            insert(raiz, actual_node_data);
+        }
+    }
 
-    std::cin >> s;
+    else {
+        std::cout << "Falha na abertura do arquivo desejado.. encerrando o programa\n";
+        return 1;
+    }
 
-    auto result = enesimoElemento(raiz, s);
-    //std::cout << std::endl;
+    file_.close();
+    path.clear();
 
+    std::cout << "Digite o endereço do arquivo contendo os comandos: ";
+    std::cin >> path;
+    std::string multi;
+    int number = 0;
 
-    std::cout << "\nElemento achado: " << result->data << "\n";
+    file_.open(path);
+    if(file_.is_open()){
+        while(std::getline(file_, multi)){
+            if(multi.find(" ") != std::string::npos) {
+                std::string command = multi.substr(0, multi.find_first_of(" "));
+                std::string to_number = multi.substr(multi.find_first_of(" "), multi.length());
+                number = std::stoi(to_number);
+                gerencia(raiz, command, number);
+            }
 
-    std::cin >> s;
+            else {
 
-    auto craco = enesimoElemento(raiz, s);
-    //std::cout << std::endl;
+                std::string command = multi.substr(0, (multi.length() - 1));
+                gerencia(raiz, command, 0);
+            }
+        }
+    }
 
-
-    std::cout << "\nElemento achado: " << craco->data << "\n";
-    //bool result = ehCheia(raiz);
-
-    //std::cout << "posicao: " << result << std::endl;
-    //if(search(raiz, 20) != nullptr) std::cout << "achei o 15\n";
-    //else std::cout << "deu bug\n";
 
     return 0;    
 }

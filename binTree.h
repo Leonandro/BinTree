@@ -100,30 +100,55 @@ int posicao(node *ptr, int data) {
     }
 }
 
-node * enesimoElemento(node * ptr, int data){
-    static int count = 0;
-    static bool heuhue = false;
-    static node * cagado;
+bool ehCheia(node * root) {
+	if (root == nullptr){
+        return false;
+    }
 
-    if (ptr == nullptr) 
+	if (root->left != nullptr && root->right != nullptr){
+		return true;
+    }
+
+	if (root->left != nullptr){
+		if (ehCheia(root->left)){
+			return true;
+        }
+		else{
+			return false;
+        }
+	}
+	else{
+		if (ehCheia(root->right)){
+			return true;
+        }
+		else {
+			return false;
+        }
+	}
+}
+
+node * enesimoElemento(node * ptr, int data){
+
+    if (ptr == nullptr){ 
         return nullptr; 
+    }
   
-    if (count <= data) { 
+    if (element_counter <= data) { 
         enesimoElemento(ptr->left, data); 
         
-        count++; 
-        if (count == data){
-            cagado =  ptr;
-            heuhue = true;
+        element_counter++; 
+        if (element_counter == data){
+            aux_node =  ptr;
+            element_counter_check = true;
         }
   
         enesimoElemento(ptr->right, data); 
     } 
 
-    if(heuhue)return cagado;
+    if(element_counter_check)return aux_node;
 }
 
-bool ehCheia (node * ptr) {
+bool estBin (node * ptr) {
     if(ptr != nullptr) {
         if(( (ptr->left == nullptr) && (ptr->right != nullptr) ) || (ptr->right == nullptr) && (ptr->left != nullptr)) {
             return false;
@@ -160,8 +185,49 @@ std::string toString(node * root) {
     return traversal;  
 }
 
-void gerencia(std::fstream file, node * tree){
-    return;
+void refresh_counters(){
+    position_counter = 0;
+    element_counter = 0;
+    position_counter_check = false;
+    element_counter_check = false;
+    aux_node = nullptr;
+}
+
+void gerencia(node * tree, std::string command, int number){
+    refresh_counters();
+
+    if(number == 0)std::cout << "[" << command << "]"<< std::endl;
+    else std::cout << "[" << command << " " << number << "]"<< std::endl;
+
+    if(command == "POSICAO"){
+        auto result = posicao(tree, number);
+        if(result > 0)std::cout << "A Posição do nó " << number << " em percusso simétrico eh: " << result << std::endl;
+        else std::cout << "O nó " << number << " Não está na árvore\n";
+    }
+
+    else if(command == "ENESIMO"){
+        auto result = enesimoElemento(tree, number);
+        std::cout << "O " << number << "º " << " em percursso simétrico eh: " << result->data << std::endl;
+    }
+    
+    else if(command == "CHEIA"){
+        if(ehCheia(tree)) std::cout << "TRUE\n";
+        else std::cout << "FALSE\n";
+    }
+
+    else if(command == "IMPRIMA"){
+        std::cout << toString(tree) << std::endl;
+    }
+
+
+    else if(command == "INSIRA"){
+        insert(tree, number);
+    }
+
+
+    else {
+        std::cout << "Comando não reconhecido\n";
+    }
 }
 
 #endif
