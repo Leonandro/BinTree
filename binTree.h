@@ -2,9 +2,12 @@
 #define BIN_TREE_H
 
 #include <iostream>
+#include <queue>
+#include <string>
+#include <fstream>
 
 int position_counter = 0, aux, element_counter = 0, level_counter = 1;
-bool position_counter_check = false, element_counter_check = false; 
+bool position_counter_check = false, element_counter_check = false;
 
 struct node {
     int data;
@@ -13,6 +16,8 @@ struct node {
     node * left;
     node * right;
 };
+
+node * aux_node;
 
 void insert(node * &root, int data) {
     if (root == nullptr) {
@@ -60,19 +65,6 @@ node * search(node * root, int data){
     }
 }
 
-void pre_ordem(node *ptr) {
-    ptr->visitado = true;
-    std::cout << ptr->data << std::endl;
-    if(ptr->left != nullptr) {
-        pre_ordem(ptr->left);
-    }
-
-    if(ptr->right != nullptr) {
-        pre_ordem(ptr->right);
-    }
-}
-
-
 void simetrica(node *ptr) {
     if(ptr->left != nullptr) {
         simetrica(ptr->left);
@@ -102,7 +94,33 @@ int posicao(node *ptr, int data) {
         posicao(ptr->right, data);
     }
 
-    if(position_counter_check) return aux;
+    if(position_counter_check)
+    {   
+        return aux;
+    }
+}
+
+node * enesimoElemento(node * ptr, int data){
+    static int count = 0;
+    static bool heuhue = false;
+    static node * cagado;
+
+    if (ptr == nullptr) 
+        return nullptr; 
+  
+    if (count <= data) { 
+        enesimoElemento(ptr->left, data); 
+        
+        count++; 
+        if (count == data){
+            cagado =  ptr;
+            heuhue = true;
+        }
+  
+        enesimoElemento(ptr->right, data); 
+    } 
+
+    if(heuhue)return cagado;
 }
 
 bool ehCheia (node * ptr) {
@@ -124,24 +142,26 @@ bool ehCheia (node * ptr) {
     }
 }
 
-bool ehNada (node * ptr) {
-    if(ptr != nullptr) {
-        if(( (ptr->left == nullptr) && (ptr->right != nullptr) ) || (ptr->right == nullptr) && (ptr->left != nullptr)) {
-            return false;
-        }
 
-        if(ptr->left != nullptr){
-            return (ehCheia(ptr->left) && ehCheia(ptr->right));
-        }
-        else{
-            return true;
-        }
+std::string toString(node * root) {
+    if(root == nullptr) {
+        return "Empty";
     }
-
-    else {
-        return false;
+    std::string traversal = "";
+    std::queue<node*> hue;
+    hue.push(root);
+    while(!hue.empty()){
+        node * aux = hue.front();
+        traversal += std::to_string(aux->data) + "  ";
+        if(aux->left != nullptr) hue.push(aux->left);
+        if(aux->right != nullptr) hue.push(aux->right);
+        hue.pop();
     }
+    return traversal;  
 }
 
+void gerencia(std::fstream file, node * tree){
+    return;
+}
 
 #endif
