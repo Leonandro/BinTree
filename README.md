@@ -6,7 +6,9 @@ Leonandro Gurgel
 
 # Compilação
 `mkdir build && cd build`
+
 `cmake -G "Unix Makefiles" ..`
+
 `make`
 
 # Execução
