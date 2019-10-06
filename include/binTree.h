@@ -6,7 +6,7 @@
 #include <string>
 #include <fstream>
 
-int position_counter = 0, aux, element_counter = 0, level_counter = 1;
+int position_counter = 0, aux, element_counter = 0, level_counter = 1, nodes_count = 0;
 bool position_counter_check = false, element_counter_check = false;
 
 struct node {
@@ -27,6 +27,7 @@ void insert(node * &root, int data) {
         root->data = data;
         root->level = level_counter;
         level_counter = 1;
+        nodes_count++;
     }
 
     else {
@@ -42,6 +43,57 @@ void insert(node * &root, int data) {
             insert(root->left, data);
         }
     }
+}
+
+node * minimo(node * root)
+{
+	while(root->left != nullptr) root = root->left;
+	return root;
+}
+
+node * remove(node * root, int data) {
+    if(root == nullptr) {
+        return nullptr;
+    }
+
+    else if(data < root->data){
+        root->left = remove(root->left, data);
+    }
+
+    else if(data > root->data){
+        root->right = remove(root->right, data);
+    }
+
+    else {
+        if(root->left == nullptr && root->right == nullptr){
+            delete root;
+            root = nullptr;
+            return root;
+        }
+
+        else if(root->left == nullptr){
+            node * aux = root;
+            root = root->right;
+            delete aux;
+            return root;
+        }
+
+        else if(root->right == nullptr){
+            node * aux = root;
+            root = root->left;
+            delete aux;
+            return root;
+        }
+
+        else {
+            node * aux = minimo(root->right);
+			root->data = aux->data;
+			root->right = remove(root->right, aux->data);
+        }
+    }
+
+    return root;
+
 }
 
 node * search(node * root, int data){
@@ -148,6 +200,10 @@ node * enesimoElemento(node * ptr, int data){
     if(element_counter_check)return aux_node;
 }
 
+node * mediana(node * root){
+    return enesimoElemento(root, (nodes_count/2));
+}
+
 bool estBin (node * ptr) {
     if(ptr != nullptr) {
         if(( (ptr->left == nullptr) && (ptr->right != nullptr) ) || (ptr->right == nullptr) && (ptr->left != nullptr)) {
@@ -222,6 +278,14 @@ void gerencia(node * tree, std::string command, int number){
 
     else if(command == "INSIRA"){
         insert(tree, number);
+    }
+
+    else if(command == "REMOVA"){
+        remove(tree, number);
+    }
+
+    else if(command == "MEDIANA"){
+        std::cout << "O nó na posição mediana (" << (nodes_count/2) << ") em percusso simétrico eh: " << mediana(tree)->data << std::endl;
     }
 
 

@@ -1,4 +1,5 @@
-#include "binTree.h"
+#include "../include/binTree.h"
+#include <sstream>
 
 int main () {
 
@@ -30,6 +31,7 @@ int main () {
     std::cin >> path;
     std::string multi;
     int number = 0;
+    std::string command;
 
     file_.open(path);
     if(file_.is_open()){
@@ -39,15 +41,23 @@ int main () {
                 std::string to_number = multi.substr(multi.find_first_of(" "), multi.length());
                 number = std::stoi(to_number);
                 gerencia(raiz, command, number);
+                std::cout << std::endl;
             }
 
             else {
-
-                std::string command = multi.substr(0, (multi.length() - 1));
+                std::stringstream aux(multi);
+                aux >> command;
                 gerencia(raiz, command, 0);
+                std::cout << std::endl;
             }
         }
     }
+
+    else {
+        std::cout << "Falha na abertura do arquivo desejado.. encerrando o programa\n";
+        return 1;
+    }
+
 
 
     return 0;    
