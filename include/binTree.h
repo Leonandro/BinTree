@@ -17,6 +17,15 @@ struct node {
     node * right;
 };
 
+// O argumeto number_nodes representa a quantidade de nó que tem na árvore
+bool isComplete (node* root, unsigned int number_nodes, unsigned int index = 0) { 
+    if (root == nullptr) 
+        return true; 
+    if (index >= number_nodes) 
+        return false; 
+    return isComplete(root->left, 2*index + 1, number_nodes) && 
+           isComplete(root->right, 2*index + 2, number_nodes); 
+} 
 node * aux_node;
 
 void insert(node * &root, int data) {
@@ -249,6 +258,7 @@ void refresh_counters(){
     aux_node = nullptr;
 }
 
+
 void gerencia(node * tree, std::string command, int number){
     refresh_counters();
 
@@ -288,7 +298,9 @@ void gerencia(node * tree, std::string command, int number){
         std::cout << "O nó na posição mediana (" << (nodes_count/2) << ") em percusso simétrico eh: " << mediana(tree)->data << std::endl;
     }
 
-
+	else if (command == "COMPLETA"){
+		std::cout << "A ávore " << (isComplete(tree, nodes_count) ? " é" : "não é") << " completa" << std::endl;
+	}
     else {
         std::cout << "Comando não reconhecido\n";
     }
